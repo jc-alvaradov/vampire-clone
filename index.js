@@ -3,12 +3,23 @@ const ctx = canvas.getContext("2d");
 
 const score = loadScore() || "new game";
 
+const player = {
+  level: 1,
+  weapons: [],
+};
+
 const sprites = [
   {
     name: "enemy",
     type: "image",
     isImageLoaded: false,
-    src: "./assets/goblin.png",
+    animation: {
+      state: "idle",
+      idle: "./assets/goblin/idle.png",
+      left: "./assets/goblin/left.png",
+      right: "./assets/goblin/right.png",
+      up: "./assets/goblin/up.png",
+    },
     x: 0,
     y: 0,
   },
@@ -93,8 +104,25 @@ function drawSprites() {
   sprites.forEach((sprite) => {
     if (sprite.type === "image") {
       const image = new Image();
+      let imgSrc;
 
-      image.src = sprite.src;
+      if (sprite.animation) {
+        if (sprite.animation.state === "idle") {
+          imgSrc = sprite.animation.idle;
+        }
+        if (sprite.animation.state === "right") {
+          imgSrc = sprite.animation.right;
+        }
+        if (sprite.animation.state === "left") {
+          imgSrc = sprite.animation.left;
+        }
+
+        if (sprite.animation.state === "up") {
+          imgSrc = sprite.animation.up;
+        }
+      }
+
+      image.src = imgSrc;
 
       image.addEventListener("load", () => {
         sprite.isImageLoaded = true;
@@ -114,6 +142,10 @@ function drawUI() {
   ctx.font = "48px Arial";
   ctx.fillStyle = "black";
   ctx.fillText(score, 10, 50);
+
+  ctx.font = "48px Arial";
+  ctx.fillStyle = "white";
+  ctx.fillText("Level: " + player.level, canvas.width - 200, 50);
 }
 
 function handleInput() {
@@ -122,6 +154,9 @@ function handleInput() {
       sprites.forEach((sprite) => {
         if (sprite.name === "enemy") {
           sprite.x = sprite.x + 1;
+          if (sprite.animation.state !== "right") {
+            sprite.animation.state = "right";
+          }
         }
       });
     }
@@ -129,7 +164,32 @@ function handleInput() {
     if (e.key === "ArrowLeft") {
       sprites.forEach((sprite) => {
         if (sprite.name === "enemy") {
+          sprite.x = sprite.x - 1;
+          if (sprite.animation.state !== "left") {
+            sprite.animation.state = "left";
+          }
+        }
+      });
+    }
+
+    if (e.key === "ArrowUp") {
+      sprites.forEach((sprite) => {
+        if (sprite.name === "enemy") {
+          sprite.y = sprite.y - 1;
+          if (sprite.animation.state !== "up") {
+            sprite.animation.state = "up";
+          }
+        }
+      });
+    }
+
+    if (e.key === "ArrowDown") {
+      sprites.forEach((sprite) => {
+        if (sprite.name === "enemy") {
           sprite.y = sprite.y + 1;
+          if (sprite.animation.state !== "idle") {
+            sprite.animation.state = "idle";
+          }
         }
       });
     }
