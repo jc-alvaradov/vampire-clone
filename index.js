@@ -23,16 +23,6 @@ const sprites = [
     x: 0,
     y: 0,
   },
-  {
-    name: "ball",
-    type: "ball",
-    x: canvas.width / 2,
-    y: canvas.height / 2,
-    radius: 10,
-    dx: 2,
-    dy: -2,
-    color: "blue",
-  },
 ];
 
 function resizeCanvas() {
@@ -79,14 +69,6 @@ function loadScore() {
 //   return distance <= ball.radius;
 // }
 
-function drawBall(sprite) {
-  ctx.beginPath();
-  ctx.arc(sprite.x, sprite.y, sprite.radius, 0, Math.PI * 2);
-  ctx.fillStyle = sprite.color;
-  ctx.fill();
-  ctx.closePath();
-}
-
 function draw() {
   canvas.style.background = "green";
 
@@ -102,6 +84,7 @@ function draw() {
 function drawSprites() {
   // read sprites array of objects with position + sprite
   sprites.forEach((sprite) => {
+    console.log({ sprite });
     if (sprite.type === "image") {
       const image = new Image();
       let imgSrc;
@@ -132,9 +115,6 @@ function drawSprites() {
         ctx.drawImage(image, sprite.x, sprite.y);
       }
     }
-    if (sprite.type === "ball") {
-      drawBall(sprite);
-    }
   });
 }
 
@@ -146,6 +126,22 @@ function drawUI() {
   ctx.font = "48px Arial";
   ctx.fillStyle = "white";
   ctx.fillText("Level: " + player.level, canvas.width - 200, 50);
+
+  ctx.font = "12px Arial";
+  ctx.fillStyle = "white";
+  ctx.fillText("canvas width: " + canvas.width, 10, 110);
+
+  ctx.font = "12px Arial";
+  ctx.fillStyle = "white";
+  ctx.fillText("canvas height: " + canvas.height, 10, 130);
+
+  ctx.font = "12px Arial";
+  ctx.fillStyle = "white";
+  ctx.fillText("x pos: " + sprites[0].x, 10, 70);
+
+  ctx.font = "12px Arial";
+  ctx.fillStyle = "white";
+  ctx.fillText("y pos: " + sprites[0].y, 10, 90);
 }
 
 function handleInput() {
@@ -153,9 +149,11 @@ function handleInput() {
     if (e.key === "ArrowRight") {
       sprites.forEach((sprite) => {
         if (sprite.name === "enemy") {
-          sprite.x = sprite.x + 1;
-          if (sprite.animation.state !== "right") {
-            sprite.animation.state = "right";
+          if (sprite.x < canvas.width - 100) {
+            sprite.x = sprite.x + 1;
+            if (sprite.animation.state !== "right") {
+              sprite.animation.state = "right";
+            }
           }
         }
       });
@@ -164,9 +162,11 @@ function handleInput() {
     if (e.key === "ArrowLeft") {
       sprites.forEach((sprite) => {
         if (sprite.name === "enemy") {
-          sprite.x = sprite.x - 1;
-          if (sprite.animation.state !== "left") {
-            sprite.animation.state = "left";
+          if (sprite.x > 0) {
+            sprite.x = sprite.x - 1;
+            if (sprite.animation.state !== "left") {
+              sprite.animation.state = "left";
+            }
           }
         }
       });
@@ -175,9 +175,11 @@ function handleInput() {
     if (e.key === "ArrowUp") {
       sprites.forEach((sprite) => {
         if (sprite.name === "enemy") {
-          sprite.y = sprite.y - 1;
-          if (sprite.animation.state !== "up") {
-            sprite.animation.state = "up";
+          if (sprite.y > 0) {
+            sprite.y = sprite.y - 1;
+            if (sprite.animation.state !== "up") {
+              sprite.animation.state = "up";
+            }
           }
         }
       });
@@ -186,9 +188,11 @@ function handleInput() {
     if (e.key === "ArrowDown") {
       sprites.forEach((sprite) => {
         if (sprite.name === "enemy") {
-          sprite.y = sprite.y + 1;
-          if (sprite.animation.state !== "idle") {
-            sprite.animation.state = "idle";
+          if (sprite.y < canvas.height - 100) {
+            sprite.y = sprite.y + 1;
+            if (sprite.animation.state !== "idle") {
+              sprite.animation.state = "idle";
+            }
           }
         }
       });
