@@ -1,4 +1,4 @@
-import { drawUI, drawText } from "./ui";
+import { drawUI, drawText } from "./ui.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
