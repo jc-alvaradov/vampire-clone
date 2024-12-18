@@ -1,17 +1,20 @@
-import { drawUI, drawText } from "./ui.js";
+import { drawUI } from "./ui.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
 const score = loadScore() || "new game";
+let timeInterval = 1000;
+let time = 0;
+let minutes = 0;
+let seconds = 0;
+const playing = true;
 
 const player = {
   level: 1,
   weapons: [],
   movementDistance: 50,
 };
-
-let renders = 0;
 
 const sprites = [
   {
@@ -29,6 +32,30 @@ const sprites = [
     y: 0,
   },
 ];
+
+function updateTime() {
+  if (playing) {
+    minutes = Math.floor(time / 60);
+    seconds = Math.floor(time % 60);
+    time++;
+  }
+}
+
+function formatTimerText() {
+  let formatedMinutes = minutes;
+  let formatedSeconds = seconds;
+
+  if (minutes < 10) {
+    formatedMinutes = "0" + minutes;
+  }
+
+  if (seconds < 10) {
+    formatedSeconds = "0" + seconds;
+  }
+  return `${formatedMinutes}:${formatedSeconds}`;
+}
+
+setInterval(updateTime, timeInterval);
 
 function loadScore() {
   const score = window.localStorage.getItem("score");
@@ -82,11 +109,7 @@ function draw() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  renders++;
-
-  drawText("RENDERS: " + renders, 10, 150);
-
-  drawUI(score, player, sprites);
+  drawUI(score, player, sprites, formatTimerText());
   drawSprites();
 }
 

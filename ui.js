@@ -7,7 +7,7 @@ export function drawText(text, x, y, opts) {
   ctx.fillText(text, x, y);
 }
 
-export function drawUI(score, player, sprites) {
+export function drawUI(score, player, sprites, time) {
   drawText(score, 10, 50, { font: "48px Arial" });
 
   drawText(`Level: ${player.level}`, canvas.width - 200, 50, {
@@ -19,4 +19,5 @@ export function drawUI(score, player, sprites) {
   drawText(`y pos: ${sprites[0].y}`, 10, 90);
   drawText(`canvas width: ${canvas.width}`, 10, 110);
   drawText(`canvas height: ${canvas.height}`, 10, 130);
+  drawText(time, canvas.width / 2, 50, { font: "48px Arial" });
 }
